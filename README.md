@@ -50,7 +50,10 @@ mvn clean install
 
 mvn spring-boot:run
 
-### 4. Admin User Seeding
+### 4. Access the app on
+http://localhost:8000
+
+### 5. Admin User Seeding
 When the app starts, it checks if an admin user exists. If not, it creates one with the following:
 
 Email: admin@company.com
