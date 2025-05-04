@@ -57,7 +57,7 @@ public class AuthController {
         
         Employee user = new Employee();
         user.setEmail(request.getEmail().trim());
-        user.setPassword(request.getPassword());
+        user.setPassword(randomPassword);
         user.setName(request.getName());
         user.setRole(request.getRole());
         user.setDepartment(request.getDepartment());
