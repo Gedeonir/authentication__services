@@ -21,7 +21,10 @@ import com.africahr.auth_service.dto.RegisterRequest;
 import com.africahr.auth_service.model.Employee;
 import com.africahr.auth_service.repository.UserRepository;
 import com.africahr.auth_service.security.JwtUtil;
+import com.africahr.auth_service.service.EmailService;
 import com.africahr.auth_service.service.UserService;
+import com.africahr.auth_service.util.PasswordUtil;
+
 import java.util.Optional;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,6 +34,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private UserService userService;
@@ -46,6 +52,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
+        
+        String randomPassword = PasswordUtil.generateRandomPassword(10);
+        
         Employee user = new Employee();
         user.setEmail(request.getEmail().trim());
         user.setPassword(request.getPassword());
@@ -55,7 +64,14 @@ public class AuthController {
         user.setAvatarUrl(request.getAvatarUrl());
 
         Employee registered = userService.registerUser(user);
-        return ResponseEntity.ok("User registered successfully");
+
+        emailService.sendEmail(
+            user.getEmail(),
+            "Welcome to the Platform",
+            "Your account has been created.\n\nEmail: " + user.getEmail() + "\nPassword: " + randomPassword
+        );
+
+        return ResponseEntity.ok("User registered successfully and password sent via email.");
     }
 
 
